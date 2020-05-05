@@ -2,6 +2,7 @@
 #define LISTE_ENTREPRISE_H
 
 #include <QWidget>
+#include <QMenu>
 
 namespace Ui {
 class liste_entreprise;
@@ -12,7 +13,7 @@ class liste_entreprise : public QWidget
     Q_OBJECT
 
 public:
-    explicit liste_entreprise(QWidget *parent = nullptr);
+     liste_entreprise(QWidget *parent = nullptr);
     ~liste_entreprise();
 
     double fRand(double fMin, double fMax)
@@ -27,8 +28,16 @@ public:
         return fMin + f * (fMax - fMin);
     }
 
+    void importer_fichier();
+
+private slots:
+
+    void on_btnSelect_clicked();
+
 private:
+
     Ui::liste_entreprise *ui;
+
 };
 
 #endif // LISTE_ENTREPRISE_H

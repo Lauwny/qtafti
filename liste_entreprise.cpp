@@ -6,49 +6,67 @@
 #include "vector"
 
 #include "QStringListModel"
+#include "QListWidget"
+#include "QToolBar"
+#include "QFileDialog"
+#include <QTextStream>
+#include <QFile>
+#include <QDataStream>
 
-
-liste_entreprise::liste_entreprise(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::liste_entreprise)
+liste_entreprise::liste_entreprise(QWidget *parent) : QWidget(parent), ui(new Ui::liste_entreprise)
 {
     ui->setupUi(this);
 
-    //setup de la liste des éléments à afficher
-    QStringListModel *model = new QStringListModel(this);
-    QStringList List;
-
-
-    List << "Clair de Lune" << "Reverie" << "Prelude";
-    model->setStringList (List);
-    //setup du tableau
-    ui->lvEnteprise->setModel(model);
-
-    //liste de seances
-    vector<seance> liste_seance;
-
-    //setup le nom du label au dessus du tableau
-    ui->labelTitre->setText("liste des entreprises");
-
-
-
-
-
-    for (int i = 1; i <= 10; i++) {
-        seance *s = new seance("05/11/63", fRand(0.0, 2.0), fRand(0.0, 2.0), 0.0, 2.0, fRandInt(1,999),"euros");
-        liste_seance.push_back(*s);
-    }
-
-
-
-
-
-
-//    societe *so = new societe("Facebook", "FBK45", 2.0, 0.0, 10, )
 }
 
 liste_entreprise::~liste_entreprise()
 {
     delete ui;
 }
+
+
+void liste_entreprise::importer_fichier(){
+    std::cout<<"clic !!!"<<std::endl;
+
+    QString fileName = QFileDialog::getOpenFileName(this,
+        tr("Open Text file"), "", tr("Text Files (*.txt)"));
+    ui->lblNomFichier->setText(fileName);
+    QFile file(fileName);
+
+    QString line;
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)){
+
+
+        QTextStream in(&file);
+          while (!in.atEnd())
+          {
+              line = in.readLine();
+              //std::cout<<line.toStdString()<<std::endl;
+              if (line.contains("ticker") ||
+                      line.contains("label") ||
+                      line.contains("date") ||
+                      line.contains("open") ||
+                      line.contains("high") ||
+                      line.contains("low") ||
+                      line.contains("close") ||
+                      line.contains("volume") ||
+                      line.contains("currency")){
+
+                  std::cout<<line.toStdString()<<std::endl;
+
+                }else{
+                  break;
+              }
+          file.close();
+
+        }
+    file.close();
+    }
+}
+
+void liste_entreprise::on_btnSelect_clicked()
+{
+    this->importer_fichier();
+}
+
 
