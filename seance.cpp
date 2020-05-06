@@ -77,7 +77,7 @@ void seance::setMonnaie_seance(std::string value)
 
 seance::seance()
 {
-    std::cout<<"Creation de la séance"<<endl;
+    //std::cout<<"Creation de la séance"<<endl;
     this->date_seance = '\0';
     this->valeur_ouverture_seance = 0.0;
     this->valeur_fermeture_seance = 0.0;
@@ -89,7 +89,7 @@ seance::seance()
 
 seance::seance(string date, double valeur_ouverture, double valeur_fermeture, double valeur_minimal, double valeur_maximal, int nb_action, string monnaie)
 {
-    std::cout<<"Creation de la séance"<<endl;
+    //std::cout<<"Creation de la séance"<<endl;
     this->date_seance = date;
     this->valeur_ouverture_seance = valeur_ouverture;
     this->valeur_fermeture_seance = valeur_fermeture;
@@ -101,7 +101,7 @@ seance::seance(string date, double valeur_ouverture, double valeur_fermeture, do
 
 seance::~seance()
 {
-    std::cout<<"destruction de la seance"<<endl;
+   // std::cout<<"destruction de la seance"<<endl;
 }
 
 

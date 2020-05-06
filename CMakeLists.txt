@@ -37,6 +37,13 @@ if(ANDROID)
     liste_entreprise.cpp
     liste_entreprise.h
     liste_entreprise.ui
+    liste_cours_entreprise.cpp
+    liste_cours_entreprise.h
+    liste_cours_entreprise.ui
+    companychart.cpp
+    companychart.h
+    companychart.ui
+
   )
 else()
   add_executable(projetafti
@@ -49,7 +56,16 @@ else()
     liste_entreprise.cpp
     liste_entreprise.h
     liste_entreprise.ui
+    liste_cours_entreprise.cpp
+    liste_cours_entreprise.h
+    liste_cours_entreprise.ui
+    companychart.cpp
+    companychart.h
+    companychart.ui
+
   )
 endif()
+
+
 
 target_link_libraries(projetafti PRIVATE Qt5::Widgets)

@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QMenu>
 #include <QListWidgetItem>
+#include "liste_cours_entreprise.h"
 
 namespace Ui {
 class liste_entreprise;
@@ -41,6 +42,12 @@ private slots:
 private:
 
     Ui::liste_entreprise *ui;
+
+    QString nom_fichier;
+    QString nom_entreprise;
+    QString code_societe;
+
+    liste_cours_entreprise *liste_cours;
 
 };
 

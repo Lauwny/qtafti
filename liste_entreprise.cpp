@@ -5,6 +5,7 @@
 #include "societe.h"
 #include "vector"
 
+
 #include "QStringListModel"
 #include "QListWidget"
 #include "QToolBar"
@@ -20,7 +21,6 @@
 liste_entreprise::liste_entreprise(QWidget *parent) : QWidget(parent), ui(new Ui::liste_entreprise)
 {
     ui->setupUi(this);
-
 }
 
 liste_entreprise::~liste_entreprise()
@@ -39,6 +39,8 @@ void liste_entreprise::importer_fichier(){
                                                     tr("Open Text file"), "", tr("Text Files (*.txt)"));
     ui->lblNomFichier->setText(fileName);
 
+    this->nom_fichier = fileName;
+
     QFile file(fileName);
     if (!file.open(QFile::ReadOnly | QFile::Text)) {
         QMessageBox::warning(this, tr("MDI"),
@@ -56,15 +58,23 @@ void liste_entreprise::importer_fichier(){
     QVector<QString> v_liste_entreprise;
     QStringList splitD;
 
+
+
+    QString text;
+
     while (!in.atEnd()) {
 
-        QString text = in.readLine();
+        text = in.readLine();
         splitD = text.split("\t");
 
         v_liste_entreprise.push_back(splitD.at(1));
         //std::cout<< "taille du vecteur avant réduction = " << vector.size ()<<std::endl;
+
     }
 
+    this->code_societe =  text.split('\t').at(0);
+
+    std::cout<<"code_societe = "<<code_societe.toStdString ()<<std::endl;
 
     std::sort( v_liste_entreprise.begin(), v_liste_entreprise.end() );
 
@@ -75,10 +85,11 @@ void liste_entreprise::importer_fichier(){
 
 
     for (QString lol : v_liste_entreprise) {
-      std::cout<<lol.toStdString ()<<std::endl;
+        std::cout<<lol.toStdString ()<<std::endl;
 
     }
-     ui->lvEntreprises->addItems(test);
+    ui->lvEntreprises->addItems(test);
+
 
 }
 
@@ -92,5 +103,12 @@ void liste_entreprise::on_btnSelect_clicked()
 
 void liste_entreprise::on_lvEntreprises_itemClicked(QListWidgetItem *item)
 {
-     std::cout<<item->text().toStdString ()<<std::endl;
+
+    this->nom_entreprise = item->text();
+
+    societe s(nom_entreprise.toStdString (), code_societe.toStdString());
+
+    liste_cours = new liste_cours_entreprise(s, nom_fichier);
+    liste_cours->show();
+
 }

@@ -22,6 +22,8 @@ private:
 public:
     societe();
 
+    societe(std::string nom, std::string code);
+
     societe(std::string nom, std::string code, double val_max, double val_min, int nb_seances, vector<seance> list);
 
     ~societe();

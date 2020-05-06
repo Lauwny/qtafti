@@ -76,6 +76,17 @@ societe::societe()
     this->liste_seance = std::vector<seance>();
 }
 
+societe::societe(std::string nom, std::string code)
+{
+    std::cout<<"Creation de la société"<<endl;
+    this->nom_societe = nom;
+    this->code_associe_societe = code;
+    this->val_max_societe = 0.0;
+    this->val_min_societe = 0.0;
+    this->nb_seances_societe = 0;
+    this->liste_seance = std::vector<seance>();
+}
+
 societe::societe(std::string nom, std::string code, double val_max, double val_min, int nb_seances, std::vector<seance> list)
 {
     std::cout<<"Creation de la société"<<endl;

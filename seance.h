@@ -7,6 +7,12 @@ using namespace std;
 class seance
 {
 private:
+
+
+public:
+    seance();
+    seance(string date, double valeur_ouverture, double valeur_fermeture, double valeur_minimal, double valeur_maximal, int nb_action, string monnaie);
+    ~seance();
     string date_seance;
     double valeur_ouverture_seance;
     double valeur_fermeture_seance;
@@ -14,11 +20,6 @@ private:
     double valeur_maximal_seance;
     int nb_action_echange_seance;
     string monnaie_seance;
-
-public:
-    seance();
-    seance(string date, double valeur_ouverture, double valeur_fermeture, double valeur_minimal, double valeur_maximal, int nb_action, string monnaie);
-    ~seance();
     string getDate_seance();
     void setDate_seance(string value);
     double getValeur_ouverture_seance() const;
