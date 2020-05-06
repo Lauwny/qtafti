@@ -13,7 +13,7 @@ class liste_entreprise : public QWidget
     Q_OBJECT
 
 public:
-     liste_entreprise(QWidget *parent = nullptr);
+    liste_entreprise(QWidget *parent = nullptr);
     ~liste_entreprise();
 
     double fRand(double fMin, double fMax)
@@ -29,6 +29,9 @@ public:
     }
 
     void importer_fichier();
+
+    void traiter_ligne(QString texte);
+
 
 private slots:
 
