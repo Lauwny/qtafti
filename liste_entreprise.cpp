@@ -15,6 +15,7 @@
 #include <fstream>
 #include <QMessageBox>
 #include <QList>
+#include <QListWidget>
 
 liste_entreprise::liste_entreprise(QWidget *parent) : QWidget(parent), ui(new Ui::liste_entreprise)
 {
@@ -36,7 +37,7 @@ void liste_entreprise::importer_fichier(){
 
     QString fileName = QFileDialog::getOpenFileName(this,
                                                     tr("Open Text file"), "", tr("Text Files (*.txt)"));
-    //ui->lblNomFichier->setText(fileName);
+    ui->lblNomFichier->setText(fileName);
 
     QFile file(fileName);
     if (!file.open(QFile::ReadOnly | QFile::Text)) {
@@ -64,23 +65,20 @@ void liste_entreprise::importer_fichier(){
         //std::cout<< "taille du vecteur avant réduction = " << vector.size ()<<std::endl;
     }
 
-    sort( v_liste_entreprise.begin(), v_liste_entreprise.end() );
-    v_liste_entreprise.erase( unique( v_liste_entreprise.begin(), v_liste_entreprise.end() ), v_liste_entreprise.end() );
-    //std::cout<< "taille du vecteur après réduction = " << vector.size ()<<std::endl;
 
-    QList<string> myList;
+    std::sort( v_liste_entreprise.begin(), v_liste_entreprise.end() );
 
-    myList.reserve(v_liste_entreprise.size());
-    std::copy(v_liste_entreprise.begin(), v_liste_entreprise.end(), std::back_inserter(myList));
-
+    v_liste_entreprise.erase( std::unique(v_liste_entreprise.begin(), v_liste_entreprise.end() ), v_liste_entreprise.end() );
 
     QStringList test = v_liste_entreprise.toList();
 
+
+
     for (QString lol : v_liste_entreprise) {
       std::cout<<lol.toStdString ()<<std::endl;
+
     }
-
-
+     ui->lvEntreprises->addItems(test);
 
 }
 
@@ -89,14 +87,10 @@ void liste_entreprise::on_btnSelect_clicked()
     this->importer_fichier();
 }
 
-void liste_entreprise::traiter_ligne(QString texte){
-    std::cout<<texte.toStdString()<<std::endl;
+
+
+
+void liste_entreprise::on_lvEntreprises_itemClicked(QListWidgetItem *item)
+{
+     std::cout<<item->text().toStdString ()<<std::endl;
 }
-
-
-
-
-
-
-
-

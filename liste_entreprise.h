@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QMenu>
+#include <QListWidgetItem>
 
 namespace Ui {
 class liste_entreprise;
@@ -30,12 +31,12 @@ public:
 
     void importer_fichier();
 
-    void traiter_ligne(QString texte);
-
 
 private slots:
 
     void on_btnSelect_clicked();
+
+    void on_lvEntreprises_itemClicked(QListWidgetItem *item);
 
 private:
 
