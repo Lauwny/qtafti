@@ -4,7 +4,9 @@
 #include <QWidget>
 #include <QMenu>
 #include <QListWidgetItem>
+#include <QTextCursor>
 #include "liste_cours_entreprise.h"
+
 
 namespace Ui {
 class liste_entreprise;
@@ -40,6 +42,12 @@ private slots:
     void on_lvEntreprises_itemClicked(QListWidgetItem *item);
 
 
+    void on_lvEntreprises_cellClicked(int row, int column);
+
+
+    void onTextChanged();
+    void onCursorPositionChanged();
+
 private:
 
     Ui::liste_entreprise *ui;
@@ -48,7 +56,14 @@ private:
     QString nom_entreprise;
     QString code_societe;
 
+    static int nb_ouverture;
+
+    enum Colonnes {
+        ENTREPRISE
+    };
+
     liste_cours_entreprise *liste_cours;
+    QTextCursor m_cursor;
 
 };
 

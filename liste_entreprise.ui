@@ -24,14 +24,7 @@
    </property>
    <layout class="QVBoxLayout" name="vLayoutEntreprise">
     <item>
-     <widget class="QListWidget" name="lvEntreprises">
-      <property name="editTriggers">
-       <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
-      </property>
-      <property name="sortingEnabled">
-       <bool>true</bool>
-      </property>
-     </widget>
+     <widget class="QTableWidget" name="lvEntreprises"/>
     </item>
    </layout>
   </widget>
@@ -84,12 +77,9 @@
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QLabel" name="label">
-      <property name="text">
-       <string>Liste des entreprises</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
+     <widget class="QTextEdit" name="teFiltre">
+      <property name="placeholderText">
+       <string>Rechercher une entreprise</string>
       </property>
      </widget>
     </item>

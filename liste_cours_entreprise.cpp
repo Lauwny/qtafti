@@ -102,6 +102,7 @@ void liste_cours_entreprise::afficher_les_seances(){
             max->setFlags(max->flags() ^ Qt::ItemIsEditable);
             QTableWidgetItem *currency  = new QTableWidgetItem(QString::fromStdString(s.getMonnaie_seance ()));
             currency->setFlags(currency->flags() ^ Qt::ItemIsEditable);
+
             ui->lvListeSeance->setItem(fila, DATE, date);
             ui->lvListeSeance->setItem(fila, V_O, v_o);
             ui->lvListeSeance->setItem(fila, V_F,v_f);

@@ -17,10 +17,13 @@
 #include <QMessageBox>
 #include <QList>
 #include <QListWidget>
+#include <QTableWidgetItem>
 
 liste_entreprise::liste_entreprise(QWidget *parent) : QWidget(parent), ui(new Ui::liste_entreprise)
 {
     ui->setupUi(this);
+    connect(ui->teFiltre, SIGNAL(textChanged()), this, SLOT(onTextChanged()));
+    connect(ui->teFiltre, SIGNAL(cursorPositionChanged()), this, SLOT(onCursorPositionChanged()));
 }
 
 liste_entreprise::~liste_entreprise()
@@ -28,9 +31,9 @@ liste_entreprise::~liste_entreprise()
     delete ui;
 }
 
-
 void liste_entreprise::importer_fichier(){
-    std::cout<<"clic !!!"<<std::endl;
+    ui->lvEntreprises->setColumnCount(1);
+    ui->lvEntreprises->setSortingEnabled(false);
 
     QStringList stringList;
     QFile textFile;
@@ -58,8 +61,6 @@ void liste_entreprise::importer_fichier(){
     QVector<QString> v_liste_entreprise;
     QStringList splitD;
 
-
-
     QString text;
 
     while (!in.atEnd()) {
@@ -73,27 +74,38 @@ void liste_entreprise::importer_fichier(){
 
     this->code_societe =  text.split('\t').at(0);
 
-    //std::cout<<"code_societe = "<<code_societe.toStdString ()<<std::endl;
-
-   // std::sort( v_liste_entreprise.begin(), v_liste_entreprise.end() );
+    QList<QString> liste_header;
+    liste_header << "Nom de l'entreprise";
 
     v_liste_entreprise.erase( std::unique(v_liste_entreprise.begin(), v_liste_entreprise.end() ), v_liste_entreprise.end() );
 
-    QStringList test = v_liste_entreprise.toList();
+    for(QString societe : v_liste_entreprise){
+
+        //std::cout<<"vecteur "<<societe.toStdString ()<<std::endl;
+        if(societe == "label"){
+            continue;
+        }else{
+            ui->lvEntreprises->setHorizontalHeaderLabels(liste_header);
+            ui->lvEntreprises->insertRow(ui->lvEntreprises->rowCount());
+            int fila = ui->lvEntreprises->rowCount () - 1;
+            std::cout<<"ui->lvEntreprises->rowCount() =  "<<ui->lvEntreprises->rowCount()<<std::endl;
+            ui->lvEntreprises->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
 
-
-    for (QString lol : v_liste_entreprise) {
-       // std::cout<<lol.toStdString ()<<std::endl;
-
+            QTableWidgetItem *entreprise  = new QTableWidgetItem(societe);
+            entreprise->setFlags(entreprise->flags() ^ Qt::ItemIsEditable);
+            ui->lvEntreprises->setItem(fila, ENTREPRISE, entreprise);
+        }
     }
-    ui->lvEntreprises->addItems(test);
 
+
+        ui->lvEntreprises->setSortingEnabled(true);
 
 }
 
 void liste_entreprise::on_btnSelect_clicked()
 {
+
     this->importer_fichier();
 }
 
@@ -103,14 +115,49 @@ void liste_entreprise::on_btnSelect_clicked()
 void liste_entreprise::on_lvEntreprises_itemClicked(QListWidgetItem *item)
 {
 
+
+
+}
+
+void liste_entreprise::on_lvEntreprises_cellClicked(int row, int column)
+{
+
+    QTableWidgetItem *item = new QTableWidgetItem;
+    item = ui->lvEntreprises->item(row,column);
     this->nom_entreprise = item->text();
+    std::cout<<"nom entreprise : "<<this->nom_entreprise.toStdString ()<<std::endl;
 
     societe s(nom_entreprise.toStdString (), code_societe.toStdString());
 
-
-
     liste_cours = new liste_cours_entreprise(s, nom_fichier);
-
     liste_cours->show();
+}
+
+void liste_entreprise::onTextChanged()
+{
+        for( int i = 0; i < ui->lvEntreprises->rowCount(); ++i )
+        {
+            bool match = false;
+            for( int j = 0; j < ui->lvEntreprises->columnCount(); ++j )
+            {
+                QTableWidgetItem *item = ui->lvEntreprises->item( i, j );
+                if( item->text().contains('AC') )
+                {
+                    match = true;
+                    break;
+                }
+            }
+            ui->lvEntreprises->setRowHidden( i, !match );
+        }
 
 }
+
+void liste_entreprise::onCursorPositionChanged()
+{
+    // Code that executes on cursor change here
+    m_cursor = ui->teFiltre->textCursor();
+}
+
+
+
+

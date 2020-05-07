@@ -51,7 +51,6 @@ void companychart::creer_charte (){
 
     QDateTime momentInTime;
 
-
     QVector<seance> v_seance  = QVector<seance>::fromStdVector (this->la_societe.getListe_seance());
     for(seance seance : v_seance){
         //std::cout<<"v_seance = "<<seance.getDate_seance ()<<std::endl;
@@ -60,32 +59,30 @@ void companychart::creer_charte (){
         QDate qd_date = QDate::fromString(qs_date_string,"dd/MM/yyyy");
         momentInTime.setDate(qd_date);
         series->append(momentInTime.toMSecsSinceEpoch(), seance.getValeur_maximal_seance());
-
-
     }
-
-
-
 
     QChart *chart = new QChart();
     chart->addSeries(series);
     chart->legend()->hide();
     chart->setTitle(QString::fromStdString(this->la_societe.getNom_societe()));
     QDateTimeAxis *axisX = new QDateTimeAxis;
-    axisX->setTickCount(10);
-    axisX->setFormat("MMM yyyy ");
+    axisX->setTickCount(20);
+    axisX->setFormat("dd/MM/yyyy"); //07/08/2020
+    //axisX->setFormat("dd MMM yyyy");
+    //axisX->setFormat("dddd MMM yyyy");
     axisX->setTitleText("Date");
     chart->addAxis(axisX, Qt::AlignBottom);
     series->attachAxis(axisX);
     QValueAxis *axisY = new QValueAxis;
     axisY->setLabelFormat("%i");
-    axisY->setTitleText("Prix du cours");
+    axisY->setTitleText("Valeur maximum atteinte");
     chart->addAxis(axisY, Qt::AlignLeft);
     series->attachAxis(axisY);
 
 
     QChartView *chartView = new QChartView(chart);
     chartView->setRenderHint(QPainter::Antialiasing);
+    chartView->setRubberBand(QChartView::HorizontalRubberBand);
 
 
     //    chart->setAnimationOptions(QChart::AllAnimations);
