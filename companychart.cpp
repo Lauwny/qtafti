@@ -1,6 +1,7 @@
 #include <iostream>
 #include "companychart.h"
 #include "ui_companychart.h"
+#include <societe.h>
 #include <QWidget>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QMainWindow>
@@ -21,7 +22,8 @@
 #include <QtCore/QRandomGenerator>
 #include <QtWidgets/QGridLayout>
 #include <QtCore/QTimer>
-#include <societe.h>
+#include <QVector>
+
 
 using namespace QtCharts;
 
@@ -31,8 +33,8 @@ companychart::companychart(societe s, QWidget *parent) :
 {
     ui->setupUi(this);
     ui->gvChart->setVisible (false);
-    this->creer_charte ();
     this->la_societe = s;
+    this->creer_charte ();
     //    std::cout<<"la societe = "<<this->la_societe ().getNom_societe ()<<std::endl;
 }
 
@@ -43,48 +45,66 @@ companychart::~companychart()
 
 void companychart::creer_charte (){
 
+
     setMinimumSize(800, 600);
     QLineSeries *series = new QLineSeries();
-    //    QString fileName = QFileDialog::getOpenFileName(this,
-    //                                                    tr("Open Text file"), "", tr("Text Files (*.txt)"));
-    QFile file("/Users/corentin/Documents/C++/QT/projetafti/RecentIndices.txt");
-    // QFile sunSpots("/Users/corentin/Documents/C++/QT/projetafti/RecentIndices.txt");
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        std::cout<<"pas ouverte"<<std::endl;
+
+    QDateTime momentInTime;
+
+    //    QFile sunSpots("/Users/corentin/Downloads/RecentIndices.txt");
+    //    if (!sunSpots.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    //          std::cout<<1<<std::endl;
+    //    }
+
+    //    QTextStream stream(&sunSpots);
+    //    while (!stream.atEnd()) {
+    //        QString line = stream.readLine();
+    //        if (line.startsWith("#") || line.startsWith(":"))
+    //            continue;
+    //        QStringList values = line.split(" ", QString::SkipEmptyParts);
+    //        QDateTime momentInTime;
+    //        momentInTime.setDate(QDate(values[0].toInt(), values[1].toInt() , 15));
+    //        std::cout<<"values[0].toInt() = "<<values[0].toInt()<<std::endl;
+    //        std::cout<<"values[1].toInt() = "<<values[1].toInt()<<std::endl;
+
+    //    }
+    //    sunSpots.close();
+
+    QVector<seance> v_seance  = QVector<seance>::fromStdVector (this->la_societe.getListe_seance());
+    for(seance seance : v_seance){
+        //std::cout<<"v_seance = "<<seance.getDate_seance ()<<std::endl;
+        QString qs_date_string = QString::fromStdString (seance.getDate_seance ());
+        std::cout<<"qs_date = "<<qs_date_string.toStdString ()<<std::endl;
+        QDate qd_date = QDate::fromString(qs_date_string,"dd/MM/yyyy");
+        momentInTime.setDate(qd_date);
+        series->append(momentInTime.toMSecsSinceEpoch(), seance.getValeur_maximal_seance());
+        //        QDate qd_date_seance = QDate::fromString(date_string,"dd/MM/yyyy");
+        //        std::cout << "Les dates = "<< qd_date_seance.toString().toStdString ()<< std::endl;
+        //        momentInTime.setDate(qd_date_seance);
+        //        series->append(momentInTime.toMSecsSinceEpoch(), 00.0);
+
     }
 
-    QTextStream stream(&file);
-    while (!stream.atEnd()) {
+    //    momentInTime.setDate(QDate(values[0].toInt(), values[1].toInt() , 15));
+    //    series->append(momentInTime.toMSecsSinceEpoch(), values[2].toDouble());
 
-        QString line = stream.readLine();
-        if (line.startsWith("#") || line.startsWith(":"))
-            continue;
-        QStringList values = line.split(" ", QString::SkipEmptyParts);
-        QDateTime momentInTime;
-        momentInTime.setDate(QDate(values[0].toInt(), values[1].toInt() , 15));
-        series->append(momentInTime.toMSecsSinceEpoch(), values[2].toDouble());
-    }
-    file.close();
 
     QChart *chart = new QChart();
-    std::cout<<"10-bis"<<std::endl;
     chart->addSeries(series);
     chart->legend()->hide();
-    chart->setTitle("Sunspots count (by Space Weather Prediction Center)");
-    std::cout<<"11"<<std::endl;
+    chart->setTitle(QString::fromStdString(this->la_societe.getNom_societe()));
     QDateTimeAxis *axisX = new QDateTimeAxis;
     axisX->setTickCount(10);
-    axisX->setFormat("MMM yyyy");
+    axisX->setFormat("MMM yyyy ");
     axisX->setTitleText("Date");
     chart->addAxis(axisX, Qt::AlignBottom);
     series->attachAxis(axisX);
-    std::cout<<"12"<<std::endl;
     QValueAxis *axisY = new QValueAxis;
     axisY->setLabelFormat("%i");
-    axisY->setTitleText("Sunspots count");
+    axisY->setTitleText("Prix du cours");
     chart->addAxis(axisY, Qt::AlignLeft);
     series->attachAxis(axisY);
-    std::cout<<"13"<<std::endl;
+
 
     QChartView *chartView = new QChartView(chart);
     chartView->setRenderHint(QPainter::Antialiasing);

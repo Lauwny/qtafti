@@ -73,9 +73,9 @@ void liste_entreprise::importer_fichier(){
 
     this->code_societe =  text.split('\t').at(0);
 
-    std::cout<<"code_societe = "<<code_societe.toStdString ()<<std::endl;
+    //std::cout<<"code_societe = "<<code_societe.toStdString ()<<std::endl;
 
-    std::sort( v_liste_entreprise.begin(), v_liste_entreprise.end() );
+   // std::sort( v_liste_entreprise.begin(), v_liste_entreprise.end() );
 
     v_liste_entreprise.erase( std::unique(v_liste_entreprise.begin(), v_liste_entreprise.end() ), v_liste_entreprise.end() );
 
@@ -84,7 +84,7 @@ void liste_entreprise::importer_fichier(){
 
 
     for (QString lol : v_liste_entreprise) {
-        std::cout<<lol.toStdString ()<<std::endl;
+       // std::cout<<lol.toStdString ()<<std::endl;
 
     }
     ui->lvEntreprises->addItems(test);

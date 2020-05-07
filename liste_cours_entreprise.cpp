@@ -20,14 +20,14 @@ liste_cours_entreprise::liste_cours_entreprise(societe s, QString fichier,  QWid
 {
     ui->setupUi(this);
 
-    std::cout<<"nom societe passé au cons = "<<s.getNom_societe ()<<std::endl;
+    // std::cout<<"nom societe passé au cons = "<<s.getNom_societe ()<<std::endl;
 
 
     this->le_nom_entreprise = QString::fromStdString(s.getNom_societe());
     this->le_code_societe = QString::fromStdString(s.getCode_associe_societe ());
     this->le_nom_fichier = fichier;
     this->la_societe = s;
-   // std::cout<<"nom societe une fois tranformé = "<<la_societe.getNom_societe ()<<std::endl;
+    // std::cout<<"nom societe une fois tranformé = "<<la_societe.getNom_societe ()<<std::endl;
     this->afficher_les_seances();
 }
 
@@ -125,6 +125,8 @@ void liste_cours_entreprise::afficher_les_seances(){
 //click sur le bouton
 void liste_cours_entreprise::on_btnShowSeance_clicked()
 {
+    // std::cout<<"v_seance.size() au clic = "<<this->la_societe.getListe_seance ().size ()<<std::endl;
+
     companychart *c = new companychart(this->la_societe);
     c->show ();
 }
