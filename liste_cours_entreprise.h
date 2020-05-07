@@ -1,6 +1,6 @@
 #ifndef LISTE_COURS_ENTREPRISE_H
 #define LISTE_COURS_ENTREPRISE_H
-
+#include <iostream>
 #include <QWidget>
 #include <QTextStream>
 #include <QListWidgetItem>
@@ -32,12 +32,9 @@ public:
     void afficher_les_seances();
 
 
-private slots:
-    void on_btnShowSeance_clicked();
-
-
 private:
     Ui::liste_cours_entreprise *ui;
+    societe la_societe;
 
     enum Colonnes
     {
@@ -52,6 +49,11 @@ private:
     double getMaxSociete(QVector<double> v_liste_max);
     double getMinSociete(QVector<double> v_liste_min);
     int getNbSeanceSociete(QVector<int> v_liste_seance);
+
+
+private slots:
+    void on_btnShowSeance_clicked();
+
 };
 
 #endif // LISTE_COURS_ENTREPRISE_H

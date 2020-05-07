@@ -3,6 +3,7 @@
 #include "seance.h"
 #include "societe.h"
 #include "companychart.h"
+#include "vector"
 #include<iostream>
 #include<QListWidgetItem>
 #include <QFile>
@@ -12,25 +13,30 @@
 #include <QDebug>
 #include <regex>
 
+
 liste_cours_entreprise::liste_cours_entreprise(societe s, QString fichier,  QWidget *parent) :
     QWidget(parent),
     ui(new Ui::liste_cours_entreprise)
 {
     ui->setupUi(this);
-    //le_nom_fichier
+
+    std::cout<<"nom societe passé au cons = "<<s.getNom_societe ()<<std::endl;
+
+
     this->le_nom_entreprise = QString::fromStdString(s.getNom_societe());
     this->le_code_societe = QString::fromStdString(s.getCode_associe_societe ());
     this->le_nom_fichier = fichier;
-    std::cout<<"le_nom_entreprise = "<<le_nom_entreprise.toStdString ()<<std::endl;
-    std::cout<<"le_nom_fichier = "<<le_nom_fichier.toStdString ()<<std::endl;
+    this->la_societe = s;
+   // std::cout<<"nom societe une fois tranformé = "<<la_societe.getNom_societe ()<<std::endl;
     this->afficher_les_seances();
-
 }
 
 liste_cours_entreprise::~liste_cours_entreprise()
 {
     delete ui;
 }
+
+
 
 //lister cours des entreprises
 void liste_cours_entreprise::afficher_les_seances(){
@@ -68,27 +74,16 @@ void liste_cours_entreprise::afficher_les_seances(){
         if(text.contains(this->le_nom_entreprise)){
             splitD = text.split("\t");
 
-            //ticker	label	date	open	high	low	close	volume	currency
-            //string date, double valeur_ouverture, double valeur_fermeture, double valeur_minimal, double valeur_maximal, int nb_action, string monnaie
-            //std::cout<<splitD.at(2).toStdString()<<splitD.at(3).toDouble()<<splitD.at(6).toDouble()<<splitD.at(5).toDouble()<<splitD.at(4).toDouble()<<splitD.at(7).toInt()<<splitD.at(8).toStdString()<<std::endl;
-
             seance s(splitD.at(2).toStdString(), splitD.at(3).toDouble(), splitD.at(6).toDouble(), splitD.at(5).toDouble(), splitD.at(4).toDouble(), splitD.at(7).toInt(), splitD.at(8).toStdString ());
 
             v_max_societe.push_back(splitD.at(4).toDouble());
             v_min_societe.push_back(splitD.at(5).toDouble());
             v_nb_seance_societe.push_back(splitD.at(7).toInt());
             v_liste_seances.push_back(s);
-
-            //            std::cout<<"taille vector = "<<v_liste_seances.size()<<std::endl;
-
-            //            QString uneSeance = splitD.at(2) + " " + splitD.at(3) + " " + splitD.at(6) +  " " + splitD.at(5) + " " + splitD.at(4) + " " + splitD.at(8);
-            //            liste_seances.push_back(uneSeance);
-
         }
 
         for(seance s : v_liste_seances){
-            //            std::cout<<"seance = " << s.getDate_seance () << std::endl;
-            //            std::cout<<"seance = " << s.getValeur_maximal_seance ()<< std::endl;
+
             ui->lvListeSeance->setHorizontalHeaderLabels(liste_header);
             ui->lvListeSeance->insertRow(ui->lvListeSeance->rowCount());
             int fila = ui->lvListeSeance->rowCount () - 1;
@@ -114,42 +109,40 @@ void liste_cours_entreprise::afficher_les_seances(){
 
         }
 
-        //        std::cout<<"taille vector max = "<<v_max_societe.size()<<std::endl;
         double max_societe = getMaxSociete(v_max_societe);
         double min_societe = getMinSociete(v_min_societe);
         int nb_seance = getNbSeanceSociete (v_nb_seance_societe);
-     //std::string nom, std::string code, double val_max, double val_min, int nb_seances, std::vector<seance> list
-        societe s(this->le_nom_entreprise.toStdString (), this->le_code_societe.toStdString (), max_societe, min_societe, nb_seance, v_liste_seances.toStdVector());
+
+        this->la_societe.setVal_max_societe (max_societe);
+        this->la_societe.setVal_min_societe (min_societe);
+        this->la_societe.setNb_seances_societe (nb_seance);
+        vector<seance> liste_seances_v = std::vector<seance>(v_liste_seances.begin (), v_liste_seances.end ());
+        this->la_societe.setListe_seance (liste_seances_v);
+        //this->le_nom_entreprise.toStdString (), this->le_code_societe.toStdString (), max_societe, min_societe, nb_seance, std::vector<seance>(v_liste_seances.begin (), v_liste_seances.end ())
     }
-
-
-
-
 }
 
 //click sur le bouton
 void liste_cours_entreprise::on_btnShowSeance_clicked()
 {
-
-    companychart *c = new companychart();
-    c->show();
-
+    companychart *c = new companychart(this->la_societe);
+    c->show ();
 }
 
 
-//return max de la valeur de la société
+////return max de la valeur de la société
 double liste_cours_entreprise::getMaxSociete(QVector<double> v_liste_max)
 {
     return *max_element(v_liste_max.begin(), v_liste_max.end());
 }
 
-//return min de la valeur de la société
+////return min de la valeur de la société
 double liste_cours_entreprise::getMinSociete(QVector<double> v_liste_min)
 {
     return *min_element(v_liste_min.begin(), v_liste_min.end());
 }
 
-//return l'addition du nombre de séances
+////return l'addition du nombre de séances
 int liste_cours_entreprise::getNbSeanceSociete(QVector<int> v_liste_seance)
 {
     int sum_of_elems;

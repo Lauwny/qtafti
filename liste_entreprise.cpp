@@ -68,7 +68,6 @@ void liste_entreprise::importer_fichier(){
         splitD = text.split("\t");
 
         v_liste_entreprise.push_back(splitD.at(1));
-        //std::cout<< "taille du vecteur avant réduction = " << vector.size ()<<std::endl;
 
     }
 
@@ -108,7 +107,10 @@ void liste_entreprise::on_lvEntreprises_itemClicked(QListWidgetItem *item)
 
     societe s(nom_entreprise.toStdString (), code_societe.toStdString());
 
+
+
     liste_cours = new liste_cours_entreprise(s, nom_fichier);
+
     liste_cours->show();
 
 }

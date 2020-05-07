@@ -1,7 +1,7 @@
-#include<iostream>
-
+#include <iostream>
 #include "companychart.h"
 #include "ui_companychart.h"
+#include <QWidget>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QMainWindow>
 #include <QtCharts/QChartView>
@@ -13,13 +13,27 @@
 #include <QtCore/QDebug>
 #include <QtCharts/QValueAxis>
 
-QT_CHARTS_USE_NAMESPACE
+#include <QtCharts/QChartView>
+#include <QtCharts/QChart>
+#include <QtCharts/QLegend>
+#include <QtCharts/QPieSeries>
+#include <QtCharts/QPieSlice>
+#include <QtCore/QRandomGenerator>
+#include <QtWidgets/QGridLayout>
+#include <QtCore/QTimer>
+#include <societe.h>
 
-companychart::companychart(QWidget *parent) :
+using namespace QtCharts;
+
+companychart::companychart(societe s, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::companychart)
 {
     ui->setupUi(this);
+    ui->gvChart->setVisible (false);
+    this->creer_charte ();
+    this->la_societe = s;
+    //    std::cout<<"la societe = "<<this->la_societe ().getNom_societe ()<<std::endl;
 }
 
 companychart::~companychart()
@@ -29,19 +43,19 @@ companychart::~companychart()
 
 void companychart::creer_charte (){
 
+    setMinimumSize(800, 600);
     QLineSeries *series = new QLineSeries();
-    //![1]
-
-    //![2]
-    // data from http://www.swpc.noaa.gov/ftpdir/weekly/RecentIndices.txt
-    // http://www.swpc.noaa.gov/ftpdir/weekly/README
-    // http://www.weather.gov/disclaimer
-    QFile sunSpots(":sun");
-    if (!sunSpots.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        std::cout<<false<<std::endl;
+    //    QString fileName = QFileDialog::getOpenFileName(this,
+    //                                                    tr("Open Text file"), "", tr("Text Files (*.txt)"));
+    QFile file("/Users/corentin/Documents/C++/QT/projetafti/RecentIndices.txt");
+    // QFile sunSpots("/Users/corentin/Documents/C++/QT/projetafti/RecentIndices.txt");
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        std::cout<<"pas ouverte"<<std::endl;
     }
-    QTextStream stream(&sunSpots);
+
+    QTextStream stream(&file);
     while (!stream.atEnd()) {
+
         QString line = stream.readLine();
         if (line.startsWith("#") || line.startsWith(":"))
             continue;
@@ -50,40 +64,38 @@ void companychart::creer_charte (){
         momentInTime.setDate(QDate(values[0].toInt(), values[1].toInt() , 15));
         series->append(momentInTime.toMSecsSinceEpoch(), values[2].toDouble());
     }
-    sunSpots.close();
-    //![2]
+    file.close();
 
-    //![3]
     QChart *chart = new QChart();
+    std::cout<<"10-bis"<<std::endl;
     chart->addSeries(series);
     chart->legend()->hide();
     chart->setTitle("Sunspots count (by Space Weather Prediction Center)");
-    //![3]
-
-    //![4]
+    std::cout<<"11"<<std::endl;
     QDateTimeAxis *axisX = new QDateTimeAxis;
     axisX->setTickCount(10);
     axisX->setFormat("MMM yyyy");
     axisX->setTitleText("Date");
     chart->addAxis(axisX, Qt::AlignBottom);
     series->attachAxis(axisX);
-
+    std::cout<<"12"<<std::endl;
     QValueAxis *axisY = new QValueAxis;
     axisY->setLabelFormat("%i");
     axisY->setTitleText("Sunspots count");
     chart->addAxis(axisY, Qt::AlignLeft);
     series->attachAxis(axisY);
-    //![4]
+    std::cout<<"13"<<std::endl;
 
-    //![5]
     QChartView *chartView = new QChartView(chart);
     chartView->setRenderHint(QPainter::Antialiasing);
-    //![5]
 
-    //![6]
-    QMainWindow window;
-    window.setCentralWidget(chartView);
-    window.resize(820, 600);
-    window.show();
-    //![6]
+
+    //    chart->setAnimationOptions(QChart::AllAnimations);
+
+
+    // create main layout
+    QGridLayout *mainLayout = new QGridLayout;
+    mainLayout->addWidget(chartView, 1, 1);
+    setLayout(mainLayout);
 }
+

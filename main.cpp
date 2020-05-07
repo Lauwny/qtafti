@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "liste_entreprise.h"
+#include "companychart.h"
 #include <QApplication>
 
 int main(int argc, char *argv[])

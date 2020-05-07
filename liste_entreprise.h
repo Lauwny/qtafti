@@ -39,6 +39,7 @@ private slots:
 
     void on_lvEntreprises_itemClicked(QListWidgetItem *item);
 
+
 private:
 
     Ui::liste_entreprise *ui;
