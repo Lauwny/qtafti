@@ -65,6 +65,8 @@ void liste_cours_entreprise::afficher_les_seances(){
     QStringList liste_seances;
 
     ui->lvListeSeance->setColumnCount(6);
+    ui->lvListeSeance->setSortingEnabled(false);
+
     QList<QString> liste_header;
     liste_header << "Date" << "Valeur ouverture" << "Valeur fermeture" << "Minimum" << "Maximum" << "Currency";
 
@@ -120,6 +122,8 @@ void liste_cours_entreprise::afficher_les_seances(){
         this->la_societe.setListe_seance (liste_seances_v);
         //this->le_nom_entreprise.toStdString (), this->le_code_societe.toStdString (), max_societe, min_societe, nb_seance, std::vector<seance>(v_liste_seances.begin (), v_liste_seances.end ())
     }
+
+    ui->lvListeSeance->setSortingEnabled(true);
 }
 
 //click sur le bouton

@@ -51,24 +51,6 @@ void companychart::creer_charte (){
 
     QDateTime momentInTime;
 
-    //    QFile sunSpots("/Users/corentin/Downloads/RecentIndices.txt");
-    //    if (!sunSpots.open(QIODevice::ReadOnly | QIODevice::Text)) {
-    //          std::cout<<1<<std::endl;
-    //    }
-
-    //    QTextStream stream(&sunSpots);
-    //    while (!stream.atEnd()) {
-    //        QString line = stream.readLine();
-    //        if (line.startsWith("#") || line.startsWith(":"))
-    //            continue;
-    //        QStringList values = line.split(" ", QString::SkipEmptyParts);
-    //        QDateTime momentInTime;
-    //        momentInTime.setDate(QDate(values[0].toInt(), values[1].toInt() , 15));
-    //        std::cout<<"values[0].toInt() = "<<values[0].toInt()<<std::endl;
-    //        std::cout<<"values[1].toInt() = "<<values[1].toInt()<<std::endl;
-
-    //    }
-    //    sunSpots.close();
 
     QVector<seance> v_seance  = QVector<seance>::fromStdVector (this->la_societe.getListe_seance());
     for(seance seance : v_seance){
@@ -78,15 +60,11 @@ void companychart::creer_charte (){
         QDate qd_date = QDate::fromString(qs_date_string,"dd/MM/yyyy");
         momentInTime.setDate(qd_date);
         series->append(momentInTime.toMSecsSinceEpoch(), seance.getValeur_maximal_seance());
-        //        QDate qd_date_seance = QDate::fromString(date_string,"dd/MM/yyyy");
-        //        std::cout << "Les dates = "<< qd_date_seance.toString().toStdString ()<< std::endl;
-        //        momentInTime.setDate(qd_date_seance);
-        //        series->append(momentInTime.toMSecsSinceEpoch(), 00.0);
+
 
     }
 
-    //    momentInTime.setDate(QDate(values[0].toInt(), values[1].toInt() , 15));
-    //    series->append(momentInTime.toMSecsSinceEpoch(), values[2].toDouble());
+
 
 
     QChart *chart = new QChart();
