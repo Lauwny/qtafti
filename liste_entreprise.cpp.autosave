@@ -119,3 +119,8 @@ void liste_entreprise::on_btnFilter_clicked()
         ui->lvEntreprises->setRowHidden( i, !match );
     }
 }
+
+void liste_entreprise::on_lvEntreprises_cellClicked(int row, int column)
+{
+    std::out<<"value item selectionné = "<<ui->lvEntreprises->get
+}
