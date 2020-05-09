@@ -14,20 +14,20 @@
 #include <regex>
 
 
-liste_cours_entreprise::liste_cours_entreprise(societe s, QString fichier,  QWidget *parent) :
+liste_cours_entreprise::liste_cours_entreprise(societe s, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::liste_cours_entreprise)
 {
     ui->setupUi(this);
-
     // std::cout<<"nom societe passé au cons = "<<s.getNom_societe ()<<std::endl;
 
 
-    this->le_nom_entreprise = QString::fromStdString(s.getNom_societe());
+    this->le_nom_societe = QString::fromStdString(s.getNom_societe());
     this->le_code_societe = QString::fromStdString(s.getCode_associe_societe ());
-    this->le_nom_fichier = fichier;
-    this->la_societe = s;
-    // std::cout<<"nom societe une fois tranformé = "<<la_societe.getNom_societe ()<<std::endl;
+    this->le_max_societe = s.getVal_max_societe ();
+    this->le_min_societe = s.getVal_min_societe ();
+    this->le_nb_seance_societe = s.getNb_seances_societe ();
+    this->les_seance_societe =  s.getListe_seance ();
     this->afficher_les_seances();
 }
 
@@ -41,25 +41,7 @@ liste_cours_entreprise::~liste_cours_entreprise()
 //lister cours des entreprises
 void liste_cours_entreprise::afficher_les_seances(){
 
-    QString fileName = this->le_nom_fichier;
-    QFile file(fileName);
-    if (!file.open(QFile::ReadOnly | QFile::Text)) {
-        QMessageBox::warning(this, tr("MDI"),
-                             tr("Cannot read file %1:\n%2.")
-                             .arg(fileName)
-                             .arg(file.errorString()));
-        std::cout<<false<<std::endl;
-    }
 
-    QTextStream in(&file);
-    QGuiApplication::setOverrideCursor(Qt::WaitCursor);
-    //std::cout<<in.readAll().toStdString()<<std::endl;
-    QGuiApplication::restoreOverrideCursor();
-
-    QVector<seance> v_liste_seances;
-    QVector<double> v_max_societe;
-    QVector<double> v_min_societe;
-    QVector<int> v_nb_seance_societe;
 
     QStringList splitD;
     QStringList liste_seances;
@@ -70,59 +52,43 @@ void liste_cours_entreprise::afficher_les_seances(){
     QList<QString> liste_header;
     liste_header << "Date" << "Valeur ouverture" << "Valeur fermeture" << "Minimum" << "Maximum" << "Currency";
 
-    while (!in.atEnd()) {
 
-        QString text = in.readLine();
-        if(text.contains(this->le_nom_entreprise)){
-            splitD = text.split("\t");
+    for(seance s : this->les_seance_societe){
 
-            seance s(splitD.at(2).toStdString(), splitD.at(3).toDouble(), splitD.at(6).toDouble(), splitD.at(5).toDouble(), splitD.at(4).toDouble(), splitD.at(7).toInt(), splitD.at(8).toStdString ());
+        ui->lvListeSeance->setHorizontalHeaderLabels(liste_header);
+        ui->lvListeSeance->insertRow(ui->lvListeSeance->rowCount());
+        int fila = ui->lvListeSeance->rowCount () - 1;
 
-            v_max_societe.push_back(splitD.at(4).toDouble());
-            v_min_societe.push_back(splitD.at(5).toDouble());
-            v_nb_seance_societe.push_back(splitD.at(7).toInt());
-            v_liste_seances.push_back(s);
-        }
+        QTableWidgetItem *date  = new QTableWidgetItem(QString::fromStdString(s.getDate_seance ()));
+        date->setFlags(date->flags() ^ Qt::ItemIsEditable);
+        QTableWidgetItem *v_o  = new QTableWidgetItem(QString::number(s.getValeur_ouverture_seance()));
+        v_o->setFlags(v_o->flags() ^ Qt::ItemIsEditable);
+        QTableWidgetItem *v_f = new QTableWidgetItem(QString::number(s.getValeur_fermeture_seance ()));
+        v_f->setFlags(v_f->flags() ^ Qt::ItemIsEditable);
+        QTableWidgetItem *min  = new QTableWidgetItem(QString::number(s.getValeur_minimal_seance ()));
+        min->setFlags(min->flags() ^ Qt::ItemIsEditable);
+        QTableWidgetItem *max  = new QTableWidgetItem(QString::number(s.getValeur_maximal_seance ()));
+        max->setFlags(max->flags() ^ Qt::ItemIsEditable);
+        QTableWidgetItem *currency  = new QTableWidgetItem(QString::fromStdString(s.getMonnaie_seance ()));
+        currency->setFlags(currency->flags() ^ Qt::ItemIsEditable);
 
-        for(seance s : v_liste_seances){
+        ui->lvListeSeance->setItem(fila, DATE, date);
+        ui->lvListeSeance->setItem(fila, V_O, v_o);
+        ui->lvListeSeance->setItem(fila, V_F,v_f);
+        ui->lvListeSeance->setItem(fila, MIN, min);
+        ui->lvListeSeance->setItem(fila, MAX, max);
+        ui->lvListeSeance->setItem(fila, CURRENCY, currency);
 
-            ui->lvListeSeance->setHorizontalHeaderLabels(liste_header);
-            ui->lvListeSeance->insertRow(ui->lvListeSeance->rowCount());
-            int fila = ui->lvListeSeance->rowCount () - 1;
-
-            QTableWidgetItem *date  = new QTableWidgetItem(QString::fromStdString(s.getDate_seance ()));
-            date->setFlags(date->flags() ^ Qt::ItemIsEditable);
-            QTableWidgetItem *v_o  = new QTableWidgetItem(QString::number(s.getValeur_ouverture_seance()));
-            v_o->setFlags(v_o->flags() ^ Qt::ItemIsEditable);
-            QTableWidgetItem *v_f = new QTableWidgetItem(QString::number(s.getValeur_fermeture_seance ()));
-            v_f->setFlags(v_f->flags() ^ Qt::ItemIsEditable);
-            QTableWidgetItem *min  = new QTableWidgetItem(QString::number(s.getValeur_minimal_seance ()));
-            min->setFlags(min->flags() ^ Qt::ItemIsEditable);
-            QTableWidgetItem *max  = new QTableWidgetItem(QString::number(s.getValeur_maximal_seance ()));
-            max->setFlags(max->flags() ^ Qt::ItemIsEditable);
-            QTableWidgetItem *currency  = new QTableWidgetItem(QString::fromStdString(s.getMonnaie_seance ()));
-            currency->setFlags(currency->flags() ^ Qt::ItemIsEditable);
-
-            ui->lvListeSeance->setItem(fila, DATE, date);
-            ui->lvListeSeance->setItem(fila, V_O, v_o);
-            ui->lvListeSeance->setItem(fila, V_F,v_f);
-            ui->lvListeSeance->setItem(fila, MIN, min);
-            ui->lvListeSeance->setItem(fila, MAX, max);
-            ui->lvListeSeance->setItem(fila, CURRENCY, currency);
-
-        }
-
-        double max_societe = getMaxSociete(v_max_societe);
-        double min_societe = getMinSociete(v_min_societe);
-        int nb_seance = getNbSeanceSociete (v_nb_seance_societe);
-
-        this->la_societe.setVal_max_societe (max_societe);
-        this->la_societe.setVal_min_societe (min_societe);
-        this->la_societe.setNb_seances_societe (nb_seance);
-        vector<seance> liste_seances_v = std::vector<seance>(v_liste_seances.begin (), v_liste_seances.end ());
-        this->la_societe.setListe_seance (liste_seances_v);
-        //this->le_nom_entreprise.toStdString (), this->le_code_societe.toStdString (), max_societe, min_societe, nb_seance, std::vector<seance>(v_liste_seances.begin (), v_liste_seances.end ())
     }
+
+    this->la_societe.setNom_societe(this->le_nom_societe.toStdString ());
+    this->la_societe.setCode_associe_societe(this->le_code_societe.toStdString ());
+    this->la_societe.setVal_max_societe (this->le_max_societe);
+    this->la_societe.setVal_min_societe (this->le_min_societe);
+    this->la_societe.setNb_seances_societe (this->le_nb_seance_societe);
+    this->la_societe.setListe_seance (this->les_seance_societe);
+    //this->le_nom_entreprise.toStdString (), this->le_code_societe.toStdString (), max_societe, min_societe, nb_seance, std::vector<seance>(v_liste_seances.begin (), v_liste_seances.end ())
+
 
     ui->lvListeSeance->setSortingEnabled(true);
 }
@@ -130,9 +96,9 @@ void liste_cours_entreprise::afficher_les_seances(){
 //click sur le bouton
 void liste_cours_entreprise::on_btnShowSeance_clicked()
 {
-    // std::cout<<"v_seance.size() au clic = "<<this->la_societe.getListe_seance ().size ()<<std::endl;
 
     companychart *c = new companychart(this->la_societe);
+    //std::cout<<"nom societe = "<<this->la_societe.getNom_societe ()<<std::endl;
     c->show ();
 }
 

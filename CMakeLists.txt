@@ -29,9 +29,6 @@ find_package(Qt5 COMPONENTS Widgets Charts REQUIRED)
 if(ANDROID)
     add_library(projetafti SHARED
         main.cpp
-        mainwindow.cpp
-        mainwindow.h
-        mainwindow.ui
         societe.cpp
         seance.cpp
         liste_entreprise.cpp
@@ -48,9 +45,6 @@ if(ANDROID)
 else()
     add_executable(projetafti
         main.cpp
-        mainwindow.cpp
-        mainwindow.h
-        mainwindow.ui
         societe.cpp
         seance.cpp
         liste_entreprise.cpp

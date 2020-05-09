@@ -5,6 +5,8 @@
 #include <QMenu>
 #include <QListWidgetItem>
 #include <QTextCursor>
+#include <QFile>
+#include <QString>
 #include "liste_cours_entreprise.h"
 
 
@@ -40,7 +42,7 @@ private slots:
     void on_btnSelect_clicked();
     void on_btnFilter_clicked();
 
-
+    void on_lvEntreprises_cellClicked(int row, int column);
 
 private:
 
@@ -55,6 +57,9 @@ private:
         ENTREPRISE
     };
 
+    double getMaxSociete(QVector<double> v_liste_max);
+    double getMinSociete(QVector<double> v_liste_min);
+    int getNbSeanceSociete(QVector<int> v_liste_seance);
 };
 
 #endif // LISTE_ENTREPRISE_H

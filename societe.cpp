@@ -2,6 +2,8 @@
 #include "iostream"
 #include "seance.h"
 #include <string>
+#include <sstream>
+
 using namespace std;
 
 

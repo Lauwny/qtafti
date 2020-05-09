@@ -40,6 +40,8 @@ public:
     void setNb_seances_societe(int value);
     vector<seance> getListe_seance() const;
     void setListe_seance(vector<seance> &value);
+
+    string toString();
 };
 
 #endif // SOCIETE_H

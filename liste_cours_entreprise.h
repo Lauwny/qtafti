@@ -4,7 +4,7 @@
 #include <QWidget>
 #include <QTextStream>
 #include <QListWidgetItem>
-#include <QVector>
+#include <vector>
 #include <societe.h>
 
 namespace Ui {
@@ -16,11 +16,15 @@ class liste_cours_entreprise : public QWidget
     Q_OBJECT
 
 public:
-    explicit liste_cours_entreprise(societe s, QString fichier, QWidget *parent = nullptr);
+    explicit liste_cours_entreprise(societe s,  QWidget *parent = nullptr);
     ~liste_cours_entreprise();
-    QString le_nom_fichier;
-    QString le_nom_entreprise;
+
+    QString le_nom_societe;
     QString le_code_societe;
+    double le_min_societe;
+    double le_max_societe;
+    int le_nb_seance_societe;
+    vector<seance> les_seance_societe;
 
     QString getLe_nom_fichier() const;
     void setLe_nom_fichier(const QString &value);
@@ -34,6 +38,7 @@ public:
 
 private:
     Ui::liste_cours_entreprise *ui;
+
     societe la_societe;
 
     enum Colonnes
