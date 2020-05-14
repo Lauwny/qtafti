@@ -65,7 +65,6 @@ void liste_entreprise::importer_fichier(){
     v_liste_entreprise.erase( std::unique(v_liste_entreprise.begin(), v_liste_entreprise.end() ), v_liste_entreprise.end() );
 
     this->code_societe =  text.split('\t').at(0);
-
     QList<QString> liste_header;
     liste_header << "Nom de l'entreprise";
 
@@ -154,7 +153,9 @@ void liste_entreprise::on_lvEntreprises_cellClicked(int row, int column)
             v_nb_seance_societe.push_back(splitD.at(7).toInt());
             v_liste_seances.push_back(s);
         }else{
-            std::cout<<"pas du fichier"<<std::endl;
+//            QMessageBox::warning(this, tr("MDI"),
+//                                 tr("Aucune entreprise ne correspond à votre recherche"));
+//            ui->lvEntreprises->setRowHidden(NULL, NULL);
         }
     }
 
