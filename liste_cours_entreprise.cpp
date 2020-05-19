@@ -21,7 +21,6 @@ liste_cours_entreprise::liste_cours_entreprise(societe s, QWidget *parent) :
     ui->setupUi(this);
     //std::cout<<"nom societe passé au cons = "<<s.getNom_societe ()<<std::endl;
 
-    std::cout<<"nom societe passé au cons = "<<s.getNom_societe ()<<std::endl;
 
     this->le_nom_societe = QString::fromStdString(s.getNom_societe());
     this->le_code_societe = QString::fromStdString(s.getCode_associe_societe ());

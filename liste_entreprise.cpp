@@ -143,20 +143,24 @@ void liste_entreprise::on_lvEntreprises_cellClicked(int row, int column)
 
     while (!in.atEnd()) {
         QString text = in.readLine();
+        replace( text.begin(), text.end(), ',', '.'); // replace all 'x' to 'y'
+
+        //condition pour eviter d'envoyer les entêtes des fichiers ( typiquement ticker, label, date etc.... )
         if(text.contains(this->nom_entreprise)){
 
             splitD = text.split("\t");
+            //3,4,5,6
 
             seance s(splitD.at(2).toStdString(), splitD.at(3).toDouble(), splitD.at(6).toDouble(), splitD.at(5).toDouble(), splitD.at(4).toDouble(), splitD.at(7).toInt(), splitD.at(8).toStdString ());
+            std::cout<<"splitD.at(4).toDouble() = "<<splitD.at(4).toStdString() <<std::endl;
             v_max_societe.push_back(splitD.at(4).toDouble());
             v_min_societe.push_back(splitD.at(5).toDouble());
             v_nb_seance_societe.push_back(splitD.at(7).toInt());
             v_liste_seances.push_back(s);
         }else{
-//            QMessageBox::warning(this, tr("MDI"),
-//                                 tr("Aucune entreprise ne correspond à votre recherche"));
-//            ui->lvEntreprises->setRowHidden(NULL, NULL);
+            continue;
         }
+
     }
 
     double max_societe = getMaxSociete(v_max_societe);
@@ -169,6 +173,12 @@ void liste_entreprise::on_lvEntreprises_cellClicked(int row, int column)
 
 
     societe *s = new societe(this->nom_entreprise.toStdString (), this->code_societe.toStdString (), max_societe, min_societe, nb_seance, liste_seances_v);
+
+    std::cout<<"nom societe passé au cons = "<<s->getNom_societe ()<<std::endl;
+    std::cout<<"code societe passé au cons = "<<s->getCode_associe_societe ()<<std::endl;
+    std::cout<<"max societe passé au cons = "<<s->getVal_max_societe ()<<std::endl;
+    std::cout<<"min societe passé au cons = "<<s->getVal_min_societe ()<<std::endl;
+    std::cout<<"nb seance societe passé au cons = "<<s->getNb_seances_societe ()<<std::endl;
 
     //    companychart *c = new companychart(this->la_societe);
 

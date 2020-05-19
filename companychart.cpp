@@ -48,7 +48,6 @@ companychart::~companychart()
 
 void companychart::creer_charte (){
 
-
     setMinimumSize(800, 600);
     QLineSeries *series = new QLineSeries();
 
@@ -110,5 +109,11 @@ void companychart::creer_charte (){
     QGridLayout *mainLayout = new QGridLayout;
     mainLayout->addWidget(chartView, 1, 1);
     setLayout(mainLayout);
+
+    QMessageBox msgBox;
+    msgBox.setText("Tips : ");
+    msgBox.setInformativeText("Pour zoomer : clique gauche et laisser glisser sur le groupe de date voulue. \n Pour dezoomer, clique droit.");
+    msgBox.setDefaultButton(QMessageBox::Ok);
+    int ret = msgBox.exec();
 }
 
